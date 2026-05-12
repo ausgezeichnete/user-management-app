@@ -167,6 +167,7 @@ export default function App() {
 
       {/* Modal — rendered outside the layout so it overlays everything */}
       <UserModal
+        key={editUser?.id ?? "new"} // ← add this one line
         isOpen={modalOpen}
         editUser={editUser}
         onSave={handleSave}

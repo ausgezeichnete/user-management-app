@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { User, UserFormData, Role, Status } from "../types/user";
 
 interface UserModalProps {
@@ -22,27 +22,19 @@ export default function UserModal({
   onClose,
 }: UserModalProps) {
   // Local state — only this component cares about these while the user is typing
-  const [form, setForm] = useState<UserFormData>(EMPTY_FORM);
+  const [form, setForm] = useState<UserFormData>(
+    editUser
+      ? {
+          name: editUser.name,
+          email: editUser.email,
+          role: editUser.role,
+          status: editUser.status,
+        }
+      : EMPTY_FORM,
+  );
   const [errors, setErrors] = useState<
     Partial<Record<keyof UserFormData, string>>
   >({});
-
-  // useEffect — runs after render, whenever editUser or isOpen changes.
-  // When editUser is not null (Edit mode): pre-fill the form with existing data.
-  // When editUser is null (Add mode): reset the form to empty.
-  useEffect(() => {
-    if (editUser) {
-      setForm({
-        name: editUser.name,
-        email: editUser.email,
-        role: editUser.role,
-        status: editUser.status,
-      });
-    } else {
-      setForm(EMPTY_FORM);
-    }
-    setErrors({}); // clear any validation errors when the modal opens
-  }, [editUser, isOpen]);
 
   // Generic handler for any field — "keyof UserFormData" means only valid field names allowed
   function handleChange(field: keyof UserFormData, value: string) {
